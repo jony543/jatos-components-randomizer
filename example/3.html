@@ -7,8 +7,10 @@
     </head>
     <body>3</body>
     <script>
-        window.setTimeout(1000, f\unction () {
-            jatosComponentsRandomizer.startNextComponent();
+        jatos.onLoad(function() {
+            setTimeout(function () {
+                jatosComponentsRandomizer.startNextComponent();
+            }, 1000);
         });
     </script>
 </html>

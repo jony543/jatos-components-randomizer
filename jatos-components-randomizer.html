@@ -1,3 +1,4 @@
+/jatos-components-randomizer/
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,7 +31,7 @@
 
             sessionStorage.setItem('jatosComponentsOrder', JSON.stringify(d));
             
-            jatos.startComponent(parseInt(Object.keys(d)[0]));   
+            jatos.startComponent(parseInt(components[0].toString()));   
         });
     </script>
 </html>
