@@ -19,11 +19,14 @@ window.jatosComponentsRandomizer = {
 	sessionStorageKeyName: 'jatosComponentsOrder',
 	startNextComponent: function () {
 		var componentsOrder = JSON.parse(sessionStorage.getItem(this.sessionStorageKeyName));
-		var next = componentsOrder[jatos.componentId.toString()];
+		
+		var next = undefined;
+		if (componentsOrder)
+			next = componentsOrder[jatos.componentId.toString()];
 
 		if (next)
 			return jatos.startComponent(next, ...arguments);	
 		else
-			return jatos.endStudy(...arguments);	
+			return jatos.endStudy(...arguments);		
 	}
 };
