@@ -13,20 +13,41 @@ function shuffle(a) {
     return a;
 }
 
-
-
 window.jatosComponentsRandomizer = {
-	sessionStorageKeyName: 'jatosComponentsOrder',
-	startNextComponent: function () {
-		var componentsOrder = JSON.parse(sessionStorage.getItem(this.sessionStorageKeyName));
-		
-		var next = undefined;
-		if (componentsOrder)
-			next = componentsOrder[jatos.componentId.toString()];
+	randomizeComponents: function(lastComponentId) {
+			var ignoreComponents = [];
+			ignoreComponents.push(jatos.componentId);
+			
+			if (lastComponentId)
+				ignoreComponents.push(lastComponentId.toString());
 
-		if (next)
-			return jatos.startComponent(next, ...arguments);	
-		else
-			return jatos.endStudy(...arguments);		
+			var componentsOrder = jatos.componentList
+                .filter(component => !ignoreComponents.includes(component.id.toString()))
+                .map(component => component.id.toString());
+            shuffle(componentsOrder);
+
+            if (lastComponentId)
+            	componentsOrder.push(lastComponentId.toString());
+
+            sessionStorage.setItem('jatosComponentsOrder', JSON.stringify(componentsOrder));
+	},	
+	startNextComponent: function () {
+		var componentsOrder = JSON.parse(sessionStorage.getItem('jatosComponentsOrder'));
+		
+		if (componentsOrder) {
+			var currIdx = componentsOrder.findIndex(c => c == jatos.componentId);
+
+			if (currIdx == -1) 
+				return jatos.startComponent(componentsOrder[0], ...arguments);	
+
+			var nextIdx = currIdx + 1;
+
+			if (nextIdx >= componentsOrder.length)
+				return jatos.endStudy(...arguments);	
+			else 
+				return jatos.startComponent(componentsOrder[nextIdx], ...arguments);	
+		} else {
+			return jatos.startNextComponent(...arguments);
+		}
 	}
 };
